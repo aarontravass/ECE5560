@@ -9,7 +9,7 @@
 #define vec2D vector<vector<int>>
 using namespace std;
 
-vec2D getCofactor(vector<vector<int>> mat, vector<vector<int>> temp, int p, int q, int n)
+vec2D getCofactor(vec2D mat, vec2D temp, int p, int q, int n)
 {
     int i = 0, j = 0;
     forn(row,n)
@@ -47,18 +47,11 @@ int determinantOfMatrix(vec2D mat, int n,int len)
     return D;
 }
 
-bool isInvertible(vector<vector<int>> mat, int n)
-{
-    if (determinantOfMatrix(mat, n,n) != 0)
-        return true;
-    else
-        return false;
-}
 
-vector<vector<int>> convertStrToSQMat(string s)
+vec2D convertStrToSQMat(string s)
 {
     int sz=ceil(sqrt(s.length()));
-    vector<vector<int>> mat(sz,vector<int>(sz,0));
+    vec2D mat(sz,vector<int>(sz,0));
     int cnt=0;
     forn(i,sz) forn(j,sz) mat[i][j]=(s[(cnt++)%s.length()]-'A');
     return mat;
