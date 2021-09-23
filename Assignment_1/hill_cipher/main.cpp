@@ -5,7 +5,7 @@
 #define forn(i,n)for(ll i=0;i<(n);i++)
 #define forn_rev(i,n)for(ll i=(n)-1;i>=0;i--)
 #define for1n(i,n) for(ll i=1;i<=(n);i++)
-#define print2D(arr) forn(i,arr.size()) forn(j,arr[0].size()) cout<<arr[i][j]<<" "; cout<<endl;
+#define print2D(arr) forn(i,arr.size()) { forn(j,arr[0].size()) { cout<<arr[i][j]<<" "; } cout<<endl;}
 #define vec2D vector<vector<int>>
 using namespace std;
 
@@ -99,7 +99,12 @@ int findInDet(int det){
     return -1;
 }
 vec2D mulMatbyNum(vec2D mat,int num){
-    forn(i,mat.size()) forn(j,mat[0].size()) mat[i][j]=mul(mat[i][j],num);
+    forn(i,mat.size())
+        forn(j,mat[0].size()) {
+            mat[i][j]=mul(mat[i][j],num);
+            while(mat[i][j]<0) mat[i][j]+=26;
+        }
+
     return mat;
 }
 
@@ -107,19 +112,19 @@ vec2D adjoint(vec2D A)
 {
     vec2D adj(A.size(),vector<int>(A.size(),0));
     vec2D temp(A.size(),vector<int>(A.size(),0));
-    if (A.size() == 1)
+    if (A[0].size() == 1)
     {
         adj[0][0] = 1;
         return adj;
     }
     int sign = 1;
-    forn(i,A.size())
+    forn(i,A[0].size())
     {
-        forn(j,A.size())
+        forn(j,A[0].size())
         {
-            temp=getCofactor(A, temp, i, j, A.size());
+            temp=getCofactor(A, temp, i, j, A[0].size());
             sign = ((i+j)%2==0)? 1: -1;
-            adj[j][i] = (sign)*(determinantOfMatrix(temp, A.size()-1,A.size()));
+            adj[j][i] = (sign)*(determinantOfMatrix(temp, A[0].size()-1,A[0].size()));
         }
     }
     return adj;
@@ -150,7 +155,9 @@ int main()
     vec2D plainMat=plainToMat(plaintext);
     vec2D ans=matMul(mat,plainMat);
     cout<<"Encrypted string is - "<<matToString(ans)<<endl;
-    vec2D inv=inverse(adjoint(ans),det);
+    cout<<det<<endl;
+    vec2D inv=inverse(adjoint(mat),det);
+    print2D(inv);
     vec2D dec=matMul(inv,ans);
     cout<<"Decrypted message is - "<<matToString(dec)<<endl;
 
