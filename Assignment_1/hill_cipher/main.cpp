@@ -64,18 +64,24 @@ vector<vector<int>> convertStrToSQMat(string s)
     return mat;
 }
 
-int add(int a,int b){
+int add(int a,int b)
+{
     return (a+b)%26;
 }
-int mul(int a,int b){
+int mul(int a,int b)
+{
     return (a*b)%26;
 }
 
-vec2D matMul(vec2D a,vec2D b){
+vec2D matMul(vec2D a,vec2D b)
+{
     vec2D ans(a.size(),vector<int>(b[0].size(),0));
-    forn(i,a.size()){
-        forn(j,b[0].size()){
-            forn(k,b.size()){
+    forn(i,a.size())
+    {
+        forn(j,b[0].size())
+        {
+            forn(k,b.size())
+            {
                 ans[i][j]=add(ans[i][j],mul(a[i][k],b[k][j]));
             }
         }
@@ -83,27 +89,35 @@ vec2D matMul(vec2D a,vec2D b){
     return ans;
 }
 
-vec2D plainToMat(string plaintext){
+vec2D plainToMat(string plaintext)
+{
     vec2D ans(plaintext.size(),vector<int>(1,0));
     forn(i,plaintext.size()) ans[i][0]=plaintext[i]-'A';
     return ans;
 }
-string matToString(vec2D m){
+string matToString(vec2D m)
+{
     string ans="";
     forn(i,m.size()) forn(j,m[0].size()) ans+=char(m[i][j]+65);
     return ans;
 }
 
-int findInDet(int det){
-    for1n(i,det) if(mul(det,i)==1) return i;
+int findInDet(int det)
+{
+    forn(i,det) if(mul(det,i)==1)
+        return i;
     return -1;
 }
-vec2D mulMatbyNum(vec2D mat,int num){
+vec2D mulMatbyNum(vec2D mat,int num)
+{
     forn(i,mat.size())
-        forn(j,mat[0].size()) {
-            mat[i][j]=mul(mat[i][j],num);
-            while(mat[i][j]<0) mat[i][j]+=26;
-        }
+    forn(j,mat[0].size())
+    {
+        while(mat[i][j]<0)
+            mat[i][j]+=26;
+        mat[i][j]=mul(mat[i][j],num);
+
+    }
 
     return mat;
 }
@@ -130,7 +144,8 @@ vec2D adjoint(vec2D A)
     return adj;
 }
 
-vec2D inverse(vec2D adj,int det){
+vec2D inverse(vec2D adj,int det)
+{
     return mulMatbyNum(adj,findInDet(det));
 }
 int main()
@@ -139,27 +154,47 @@ int main()
     string key,plaintext;
     cin>>key>>plaintext;
     int sz=ceil(sqrt(key.length()));
-    if(sz!=plaintext.size()) {
-        cout<<"Input a plaintext with valid length"<<endl;
-        return 0;
+    int added_chars=0;
+    while(1)
+    {
+        if(plaintext.size()%sz!=0)
+        {
+            plaintext+='x';
+            added_chars++;
+        }
+        else
+            break;
     }
+    cout<<plaintext<<endl;
     transform(key.begin(), key.end(), key.begin(), ::toupper);
     transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
     vector<vector<int>> mat=convertStrToSQMat(key);
     int det=determinantOfMatrix(mat,mat.size(),mat.size());
 
-    if(det==0){
+    if(det==0)
+    {
         cout<<"The key is not invertible"<<endl;
         return 0;
     }
-    vec2D plainMat=plainToMat(plaintext);
-    vec2D ans=matMul(mat,plainMat);
-    cout<<"Encrypted string is - "<<matToString(ans)<<endl;
-    cout<<det<<endl;
-    vec2D inv=inverse(adjoint(mat),det);
-    print2D(inv);
-    vec2D dec=matMul(inv,ans);
-    cout<<"Decrypted message is - "<<matToString(dec)<<endl;
+    string full_enc="",full_dec="";
+    for(int l=0; l<plaintext.size(); l+=sz)
+    {
+        cout<<l<<endl;
+        string s="";
+        for(int j=l; j<l+sz; j++)
+            s+=plaintext[j];
+        vec2D plainMat=plainToMat(s);
+        vec2D ans=matMul(mat,plainMat);
+        full_enc+=matToString(ans);
+        vec2D inv=inverse(adjoint(mat),det);
+        vec2D dec=matMul(inv,ans);
+        full_dec+=matToString(dec);
+    }
+    cout<<"Encrypted string is - "<<full_enc<<endl;
+    string final_dec="";
+    forn(i,full_dec.size()-added_chars) final_dec+=full_dec[i];
+    cout<<"Decrypted string is - "<<final_dec<<endl;
+
 
 
 
