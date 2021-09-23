@@ -169,6 +169,10 @@ int main()
         cout<<"The key is not invertible"<<endl;
         return 0;
     }
+    if(findInDet(det)<0){
+        cout<<"The key is not invertible"<<endl;
+        return 0;
+    }
     string full_enc="",full_dec="";
     for(int l=0; l<plaintext.size(); l+=sz)
     {
