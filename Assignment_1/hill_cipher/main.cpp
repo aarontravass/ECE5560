@@ -9,7 +9,7 @@
 #define vec2D vector<vector<int>>
 using namespace std;
 
-void getCofactor(vector<vector<int>> &mat, vector<vector<int>> &temp, int p, int q, int n)
+vec2D getCofactor(vector<vector<int>> mat, vector<vector<int>> temp, int p, int q, int n)
 {
     int i = 0, j = 0;
     forn(row,n)
@@ -27,20 +27,20 @@ void getCofactor(vector<vector<int>> &mat, vector<vector<int>> &temp, int p, int
             }
         }
     }
+    return temp;
 }
 
-int determinantOfMatrix(vector<vector<int>> mat, int n,int len)
+int determinantOfMatrix(vec2D mat, int n,int len)
 {
     int D = 0;
     if (n == 1)
         return mat[0][0];
 
-    vector<vector<int>> temp(len,vector<int>(len));
-
+    vec2D temp(len,vector<int>(len));
     int sign = 1;
     forn(f,n)
     {
-        getCofactor(mat, temp, 0, f, n);
+        temp=getCofactor(mat, temp, 0, f, n);
         D += sign * mat[0][f] * determinantOfMatrix(temp, n - 1, len);
         sign = -sign;
     }
@@ -49,7 +49,7 @@ int determinantOfMatrix(vector<vector<int>> mat, int n,int len)
 
 bool isInvertible(vector<vector<int>> mat, int n)
 {
-    if (determinantOfMatrix(mat, n,2) != 0)
+    if (determinantOfMatrix(mat, n,n) != 0)
         return true;
     else
         return false;
@@ -93,6 +93,41 @@ string matToString(vec2D m){
     forn(i,m.size()) forn(j,m[0].size()) ans+=char(m[i][j]+65);
     return ans;
 }
+
+int findInDet(int det){
+    for1n(i,det) if(mul(det,i)==1) return i;
+    return -1;
+}
+vec2D mulMatbyNum(vec2D mat,int num){
+    forn(i,mat.size()) forn(j,mat[0].size()) mat[i][j]=mul(mat[i][j],num);
+    return mat;
+}
+
+vec2D adjoint(vec2D A)
+{
+    vec2D adj(A.size(),vector<int>(A.size(),0));
+    vec2D temp(A.size(),vector<int>(A.size(),0));
+    if (A.size() == 1)
+    {
+        adj[0][0] = 1;
+        return adj;
+    }
+    int sign = 1;
+    forn(i,A.size())
+    {
+        forn(j,A.size())
+        {
+            temp=getCofactor(A, temp, i, j, A.size());
+            sign = ((i+j)%2==0)? 1: -1;
+            adj[j][i] = (sign)*(determinantOfMatrix(temp, A.size()-1,A.size()));
+        }
+    }
+    return adj;
+}
+
+vec2D inverse(vec2D adj,int det){
+    return mulMatbyNum(adj,findInDet(det));
+}
 int main()
 {
     int n;
@@ -106,13 +141,18 @@ int main()
     transform(key.begin(), key.end(), key.begin(), ::toupper);
     transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
     vector<vector<int>> mat=convertStrToSQMat(key);
-    if(!isInvertible(mat,mat.size())){
+    int det=determinantOfMatrix(mat,mat.size(),mat.size());
+
+    if(det==0){
         cout<<"The key is not invertible"<<endl;
         return 0;
     }
     vec2D plainMat=plainToMat(plaintext);
     vec2D ans=matMul(mat,plainMat);
     cout<<"Encrypted string is - "<<matToString(ans)<<endl;
+    vec2D inv=inverse(adjoint(ans),det);
+    vec2D dec=matMul(inv,ans);
+    cout<<"Decrypted message is - "<<matToString(dec)<<endl;
 
 
 
