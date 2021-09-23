@@ -5,7 +5,7 @@
 #define forn(i,n)for(ll i=0;i<(n);i++)
 #define forn_rev(i,n)for(ll i=(n)-1;i>=0;i--)
 #define for1n(i,n) for(ll i=1;i<=(n);i++)
-#define print2D(arr) forn(i,arr.size()) forn(j,arr[0].size()) cout<<arr[i][j]<<" ";
+#define print2D(arr) forn(i,arr.size()) forn(j,arr[0].size()) cout<<arr[i][j]<<" "; cout<<endl;
 #define vec2D vector<vector<int>>
 using namespace std;
 
@@ -90,28 +90,31 @@ vec2D plainToMat(string plaintext){
 }
 string matToString(vec2D m){
     string ans="";
-    forn(i,m.size()) forn(j,m[0].size()) ans+=to_string(m[i][j]+65);
+    forn(i,m.size()) forn(j,m[0].size()) ans+=char(m[i][j]+65);
     return ans;
 }
 int main()
 {
     int n;
     string key,plaintext;
+    cin>>key>>plaintext;
     int sz=ceil(sqrt(key.length()));
-    if(sz!=key.size()) cout<<"Input a plaintext with valid length"<<endl;
+    if(sz!=plaintext.size()) {
+        cout<<"Input a plaintext with valid length"<<endl;
+        return 0;
+    }
     transform(key.begin(), key.end(), key.begin(), ::toupper);
     transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
-    cin>>key;
     vector<vector<int>> mat=convertStrToSQMat(key);
-    print2D(mat);
-    if(!isInvertible(mat,mat.size()))
+    if(!isInvertible(mat,mat.size())){
         cout<<"The key is not invertible"<<endl;
-    else{
-        vec2D plainMat=plainToMat(plaintext);
-        vec2D ans=matMul(mat,plainMat);
-        cout<<matToString(ans)<<endl;
-
+        return 0;
     }
+    vec2D plainMat=plainToMat(plaintext);
+    vec2D ans=matMul(mat,plainMat);
+    cout<<"Encrypted string is - "<<matToString(ans)<<endl;
+
+
 
 
 
