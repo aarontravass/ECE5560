@@ -1,10 +1,13 @@
 #include <bits/stdc++.h>
+#define ll long long int
+#define ld long double
+#define ull unsigned long long int
 
 using namespace std;
 
-int power(int x, unsigned int y, int p)
+ll power(ll x, ull y, ll p)
 {
-    int res = 1;
+    ll res = 1;
     x = x % p;
 
     while (y > 0)
@@ -18,16 +21,16 @@ int power(int x, unsigned int y, int p)
 }
 
 
-int millerTest(int d, int n)
+ll millerTest(ll d, ll n)
 {
     srand(time(0));
-    int a = 2 + rand() % (n - 4);
-    int x = power(a, d, n);
+    ll a = 2 + rand() % (n - 4);
+    ll x = power(a, d, n);
     if (x == 1  || x == n-1)
         return 0;
     while (d != n-1)
     {
-        int y = (x * x) % n;
+        ll y = (x * x) % n;
         d *= 2;
 
         if (y == 1)
@@ -42,7 +45,7 @@ int millerTest(int d, int n)
 }
 
 
-pair<int,bool> isPrime(int n, int k)
+pair<ll,bool> isPrime(ll n, ll k)
 {
 
     if (n <= 1)
@@ -52,29 +55,35 @@ pair<int,bool> isPrime(int n, int k)
     if (n <= 3)
         return make_pair(0,true);
 
-    int d = n - 1;
+    ll d = n - 1;
     while (d % 2 == 0)
         d /= 2;
-    for (int i = 0; i < k; i++){
-        int w=millerTest(d, n);
+    for (ll i = 0; i < k; i++){
+        ll w=millerTest(d, n);
         if (w>0) return make_pair(w,false);
     }
 
     return make_pair(0,true);
 }
 
+ll findDivisor(ll n){
+    if(n%2==0) return 2;
+    for(ll i=3;i*i<=n;i+=2){
+        if(n%i==0) return i;
+    }
+}
 int main()
 {
 
 
-    int n;
+    ll n;
     float e;
+    cout<<"Enter a number and the error margin separated by a new line"<<endl;
     cin>>n>>e;
-    int no_rounds=ceil(log10(e/100.0)/log10(0.25));
-    cout<<"No of rounds: "<<no_rounds<<endl;
-    pair<int,bool> ans=isPrime(n, no_rounds);
+    ll no_rounds=ceil(log10(e/100.0)/log10(0.25));
+    pair<ll,bool> ans=isPrime(n, no_rounds);
     if(ans.second) cout<<"TRUE"<<endl;
-    else cout<<"FALSE. Witness is "<<ans.first<<endl;
+    else cout<<"FALSE. Witness is "<<ans.first<<".\nOne of the divisor of this number is "<<findDivisor(n)<<endl;
 
     return 0;
 }

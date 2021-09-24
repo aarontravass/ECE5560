@@ -7,6 +7,10 @@
 #define for1n(i,n) for(ll i=1;i<=(n);i++)
 #define print2D(arr) forn(i,arr.size()) { forn(j,arr[0].size()) { cout<<arr[i][j]<<" "; } cout<<endl;}
 #define vec2D vector<vector<ll>>
+#define lapsed(t2,t1) chrono::duration_cast<chrono::microseconds>(t2-t1).count()
+#define time Clock::now()
+typedef std::chrono::high_resolution_clock Clock;
+
 using namespace std;
 
 vec2D getCofactor(vec2D mat, vec2D temp, ll p, ll q, ll n)
@@ -174,21 +178,35 @@ bool testKey(vec2D key,string ciphertext,string plaintext,int n){
     }
     return true;
 }
+string preprocess(string s){
+    string ans="";
+    forn(i,s.size()){
+        ll temp=(s[i]-'A');
+        if(temp<=25 && temp>=0) ans+=s[i];
+    }
+    return ans;
+}
+
 int main()
 {
+    ios_base::sync_with_stdio(0);
     string ciphertext,plaintext;
-    int n;
+    ll n;
+    cout<<"Enter a plain text, cipher text and the matrix size, separated by new lines"<<endl;
     cin>>ciphertext>>plaintext>>n;
+    auto t1=time;
+    transform(ciphertext.begin(), ciphertext.end(), ciphertext.begin(), ::toupper);
+    transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
+    plaintext=preprocess(plaintext);
+    ciphertext=preprocess(ciphertext);
     if(n*n>ciphertext.size()){
-        cout<<"Cipher text must have size of at least "<<n*n<<endl;
+        cout<<"Cipher text must have size of at least "<<n*n<<" chars"<<endl;
         return 0;
     }
     if(n*n>plaintext.size()){
-        cout<<"Plain text must have size of at least "<<n*n<<endl;
+        cout<<"Plain text must have size of at least "<<n*n<<" chars"<<endl;
         return 0;
     }
-    transform(ciphertext.begin(), ciphertext.end(), ciphertext.begin(), ::toupper);
-    transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
     vec2D plain=fetchMatFromStrAndSz(plaintext,n);
     vec2D cipher=fetchMatFromStrAndSz(ciphertext,n);
     ll plain_det=(determinantOfMatrix(plain,n,n));
@@ -212,7 +230,8 @@ int main()
         cout<<"The key is - "<<matToString(key)<<endl;
     }
     else cout<<"A key could not be found!"<<endl;
-
+    auto t2=time;
+    cout<<endl<<"Time lapsed: "<<lapsed(t2,t1)<<" micro seconds"<<endl;
 
 
     return 0;
