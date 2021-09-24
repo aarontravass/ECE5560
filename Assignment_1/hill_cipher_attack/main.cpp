@@ -141,64 +141,8 @@ vec2D inverse(vec2D adj,ll det)
 {
     return mulMatbyNum(adj,findInDet(det));
 }
-
-
 int main()
 {
-    string key,plaintext;
-    cin>>key>>plaintext;
-    ll sz=ceil(sqrt(key.length()));
-    ll added_chars=0;
-    while(1)
-    {
-        if(plaintext.size()%sz!=0)
-        {
-            plaintext+='x';
-            added_chars++;
-        }
-        else
-            break;
-    }
-    transform(key.begin(), key.end(), key.begin(), ::toupper);
-    transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
-    vector<vector<ll>> mat=convertStrToSQMat(key);
-    ll det=determinantOfMatrix(mat,mat.size(),mat.size());
-
-    if(det==0)
-    {
-        cout<<"The key is not invertible"<<endl;
-        return 0;
-    }
-    if(det%2==0 || det%13==0){
-        cout<<"The key is invalid"<<endl;
-        return 0;
-    }
-    if(findInDet(det)<0){
-        cout<<"The key is not invertible"<<endl;
-        return 0;
-    }
-    string full_enc="",full_dec="";
-    for(ll l=0; l<plaintext.size(); l+=sz)
-    {
-        string s="";
-        for(ll j=l; j<l+sz; j++)
-            s+=plaintext[j];
-        vec2D plainMat=plainToMat(s);
-        vec2D ans=matMul(mat,plainMat);
-        full_enc+=matToString(ans);
-        vec2D inv=inverse(adjoint(mat),det);
-        vec2D dec=matMul(inv,ans);
-        full_dec+=matToString(dec);
-    }
-    cout<<"Encrypted string is - "<<full_enc<<endl;
-    string final_dec="";
-    forn(i,full_dec.size()-added_chars) final_dec+=full_dec[i];
-    cout<<"Decrypted string is - "<<final_dec<<endl;
-
-
-
-
-
-
+    cout << "Hello world!" << endl;
     return 0;
 }

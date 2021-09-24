@@ -20,24 +20,25 @@ int power(int x, unsigned int y, int p)
 
 int millerTest(int d, int n)
 {
-
+    srand(time(0));
     int a = 2 + rand() % (n - 4);
     int x = power(a, d, n);
     if (x == 1  || x == n-1)
         return 0;
     while (d != n-1)
     {
-        x = (x * x) % n;
+        int y = (x * x) % n;
         d *= 2;
 
-        if (x == 1)
-            return a;
+        if (y == 1)
+            return __gcd(x-1,n);
+        x=y;
         if (x == n-1)
             return 0;
     }
 
 
-    return a;
+    return 1;
 }
 
 
