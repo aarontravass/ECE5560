@@ -97,21 +97,19 @@ string matToString(vec2D m)
 
 ll findInDet(ll det)
 {
-    forn(i,det) if(mul(det,i)==1)
+    for1n(i,25) if(mul(det,i)==1)
         return i;
     return -1;
 }
 vec2D mulMatbyNum(vec2D mat,ll num)
 {
     forn(i,mat.size())
-    forn(j,mat[0].size())
-    {
-        while(mat[i][j]<0)
-            mat[i][j]+=26;
-        mat[i][j]=mul(mat[i][j],num);
-
-    }
-
+        forn(j,mat[0].size())
+        {
+            while(mat[i][j]<0)
+                mat[i][j]+=26;
+            mat[i][j]=mul(mat[i][j],num);
+        }
     return mat;
 }
 
@@ -164,7 +162,7 @@ pair<bool,string> subset(string s,int i, int j){
 }
 
 bool testKey(vec2D key,string ciphertext,string plaintext,int n){
-    forn(i,plaintext.size()){
+    for(int i=0;i<plaintext.size();i+=n*n){
         pair<bool,string> cipherSub=subset(ciphertext,i,i+n*n);
         if(!cipherSub.first) return true;
         pair<bool,string> plainSub=subset(plaintext,i,i+n*n);
@@ -193,7 +191,8 @@ int main()
     transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
     vec2D plain=fetchMatFromStrAndSz(plaintext,n);
     vec2D cipher=fetchMatFromStrAndSz(ciphertext,n);
-    ll plain_det=determinantOfMatrix(plain,n,n);
+    ll plain_det=(determinantOfMatrix(plain,n,n));
+    while(plain_det<0) plain_det+=26;
     if(plain_det==0)
     {
         cout<<"The key is not invertible"<<endl;

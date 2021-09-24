@@ -97,7 +97,7 @@ string matToString(vec2D m)
 
 ll findInDet(ll det)
 {
-    forn(i,det) if(mul(det,i)==1)
+    for1n(i,25) if(mul(det,i)==1)
         return i;
     return -1;
 }
@@ -163,8 +163,8 @@ int main()
     transform(key.begin(), key.end(), key.begin(), ::toupper);
     transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
     vector<vector<ll>> mat=convertStrToSQMat(key);
-    ll det=determinantOfMatrix(mat,mat.size(),mat.size());
-
+    ll det=(determinantOfMatrix(mat,mat.size(),mat.size()));
+    while(det<0) det+=26;
     if(det==0)
     {
         cout<<"The key is not invertible"<<endl;
