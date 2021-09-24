@@ -141,8 +141,80 @@ vec2D inverse(vec2D adj,ll det)
 {
     return mulMatbyNum(adj,findInDet(det));
 }
+
+vec2D fetchMatFromStrAndSz(string s, int n){
+    vec2D mat(n,vector<ll>(n,0));
+    int cnt=0;
+    forn(i,n) forn(j,n) mat[i][j]=s[cnt++]-'A';
+    return mat;
+}
+
+bool matEqual(vec2D a,vec2D b){
+    forn(i,a.size()) forn(j,a.size()) if(a[i][j]!=b[i][j]) return false;
+    return true;
+}
+
+pair<bool,string> subset(string s,int i, int j){
+    if(j>=s.size()){
+        return make_pair(false,"");
+    }
+    string ans="";
+    for(int itr=i;itr<=j;itr++) ans+=s[itr];
+    return make_pair(true,ans);
+}
+
+bool testKey(vec2D key,string ciphertext,string plaintext,int n){
+    forn(i,plaintext.size()){
+        pair<bool,string> cipherSub=subset(ciphertext,i,i+n*n);
+        if(!cipherSub.first) return true;
+        pair<bool,string> plainSub=subset(plaintext,i,i+n*n);
+        if(!plainSub.first) return true;
+        vec2D plain=fetchMatFromStrAndSz(plainSub.second,n);
+        vec2D cipher=fetchMatFromStrAndSz(cipherSub.second,n);
+        vec2D new_ciph=matMul(plain,key);
+        if(!matEqual(new_ciph,cipher)) return false;
+    }
+    return true;
+}
 int main()
 {
-    cout << "Hello world!" << endl;
+    string ciphertext,plaintext;
+    int n;
+    cin>>ciphertext>>plaintext>>n;
+    if(n*n>ciphertext.size()){
+        cout<<"Cipher text must have size of at least "<<n*n<<endl;
+        return 0;
+    }
+    if(n*n>plaintext.size()){
+        cout<<"Plain text must have size of at least "<<n*n<<endl;
+        return 0;
+    }
+    transform(ciphertext.begin(), ciphertext.end(), ciphertext.begin(), ::toupper);
+    transform(plaintext.begin(), plaintext.end(), plaintext.begin(), ::toupper);
+    vec2D plain=fetchMatFromStrAndSz(plaintext,n);
+    vec2D cipher=fetchMatFromStrAndSz(ciphertext,n);
+    ll plain_det=determinantOfMatrix(plain,n,n);
+    if(plain_det==0)
+    {
+        cout<<"The key is not invertible"<<endl;
+        return 0;
+    }
+    if(plain_det%2==0 || plain_det%13==0){
+        cout<<"The key is invalid"<<endl;
+        return 0;
+    }
+    if(findInDet(plain_det)<0){
+        cout<<"The key is not invertible"<<endl;
+        return 0;
+    }
+    vec2D inv_plain=inverse(adjoint(plain),plain_det);
+    vec2D key=matMul(inv_plain,cipher);
+    if(testKey(key,ciphertext,plaintext,n)){
+        cout<<"The key is - "<<matToString(key)<<endl;
+    }
+    else cout<<"A key could not be found!"<<endl;
+
+
+
     return 0;
 }
