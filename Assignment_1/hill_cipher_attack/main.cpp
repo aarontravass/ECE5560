@@ -231,7 +231,7 @@ int main()
     }
     else cout<<"A key could not be found!"<<endl;
     auto t2=time;
-    cout<<endl<<"Time lapsed: "<<lapsed(t2,t1)<<" micro seconds"<<endl;
+    cout<<endl<<"Time elapsed: "<<lapsed(t2,t1)<<" micro seconds"<<endl;
 
 
     return 0;
