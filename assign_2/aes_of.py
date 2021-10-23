@@ -23,40 +23,35 @@ def decrypt(enc_string):
     final_dec = b''
     enc = bytes.fromhex(enc_string)
     is_first = True
-    prevBlock = None
+    aes_round_res = None
     for rnd in range(int(len(enc) / block_size)):
         block = enc[rnd * block_size: (rnd + 1) * block_size]
-        xor_bytes = block
         aescipher = AES.new(key, AES.MODE_ECB)
-        aes_round_res = aescipher.decrypt(xor_bytes)
-        xor_res = None
         if is_first:
-            xor_res = xor(iv, aes_round_res)
+            aes_round_res = aescipher.encrypt(iv)
         else:
-            xor_res = xor(prevBlock, aes_round_res)
+            aes_round_res = aescipher.encrypt(aes_round_res)
+        xor_res = xor(block, aes_round_res)
         print('Decrypted:	', xor_res)
         final_dec += xor_res
-        prevBlock = block
         is_first=False
-    print("Decrypted text is", unpad(final_dec))
+    print("Decrypted text is", (final_dec))
 
 def encrypt(text1):
-    text1 = pad(text1)
     print('Original:	', text1.hex())
     is_first = True
-    aes_round_res = ""
+    aes_round_res = None
     final_enc = ""
     for rnd in range(int(len(text1) / block_size)):
         block = text1[rnd * block_size: (rnd + 1) * block_size]
-        xor_res: bytes = None
-        if is_first:
-            xor_res = xor(iv, block)
-        else:
-            xor_res = xor(aes_round_res, block)
         aescipher = AES.new(key, AES.MODE_ECB)
-        aes_round_res = aescipher.encrypt(xor_res)
-        print('Encrypted:	', aes_round_res.hex())
-        final_enc += aes_round_res.hex()
+        if is_first:
+            aes_round_res = aescipher.encrypt(iv)
+        else:
+            aes_round_res = aescipher.encrypt(aes_round_res)
+        xor_res = xor(aes_round_res, block)
+        print('Encrypted:	', xor_res.hex())
+        final_enc += xor_res.hex()
         is_first = False
     print("Encrypted text is", final_enc)
     return final_enc
