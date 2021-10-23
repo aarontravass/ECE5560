@@ -1,3 +1,12 @@
-This is a sample text messsage. Please make sure to use correct padding.
-Hello, this is fun for me.
-Trying different Cipher modes is cool.
+128-bit Key: 0xffeeddccbbaa99887766554433221100 (for testing only, please still use AES-256 for this task.)
+256-bit Key: 0xffeeddccbbaa99887766554433221100ffeeddccbbaa99887766554433221100 
+
+128 bit IV:  0x0f0e0d0c0b0a09080f0e0d0c0b0a0908
+
+AES_CBC_Plaintext1 for the CBC plaintext input
+AES_CBC_Ciphertext128.bin for the CBC mode encrypted output (AES 128 bit)
+AES_CBC_Ciphertext256.bin for the CBC mode encrypted output (AES 256 bit)
+
+AES_OFB_Plaintext1 for the OFB mode plaintext input
+AES_OFB_Ciphertext128.bin for the OFB mode encrypted output (AES 128 bit)
+AES_OFB_Ciphertext256.bin for the OFB mode encrypted output (AES 256 bit)
