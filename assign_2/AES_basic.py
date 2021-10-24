@@ -35,7 +35,7 @@ def decrypt(enc_string):
             xor_res = xor(iv, aes_round_res)
         else:
             xor_res = xor(prevBlock, aes_round_res)
-        print('Decrypted:	', xor_res)
+        #print('Decrypted:	', xor_res)
         final_dec += xor_res
         prevBlock = block
         is_first=False
@@ -43,11 +43,10 @@ def decrypt(enc_string):
 
 def encrypt(text1):
     text1 = pad(text1)
-    print('Original:	', text1)
+    #print('Original:	', text1)
     is_first = True
     aes_round_res = ""
     final_enc = ""
-    final_byte=b''
     for rnd in range(int(len(text1) / block_size)):
         block = text1[rnd * block_size: (rnd + 1) * block_size]
         xor_res: bytes = None
@@ -57,12 +56,10 @@ def encrypt(text1):
             xor_res = xor(aes_round_res, block)
         aescipher = AES.new(key, AES.MODE_ECB)
         aes_round_res = aescipher.encrypt(xor_res)
-        print('Encrypted:	', aes_round_res.hex())
+        #print('Encrypted:	', aes_round_res.hex())
         final_enc += aes_round_res.hex()
         is_first = False
-        final_byte+=aes_round_res
     print("Encrypted text is", final_enc)
-    print(final_byte)
     return final_enc
 
 iv = bytes.fromhex('0f0e0d0c0b0a09080f0e0d0c0b0a0908')
