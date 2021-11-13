@@ -1,5 +1,5 @@
 import math
-
+from Crypto.Random import get_random_bytes
 from Crypto.Cipher import AES
 from binascii import unhexlify
 from base64 import b64encode, b64decode
@@ -58,7 +58,7 @@ def encrypt(text1):
     print("Encrypted text is", final_enc)
     return final_enc
 
-iv = bytes.fromhex('0f0e0d0c0b0a09080f0e0d0c0b0a0908')
+iv = get_random_bytes(16)
 f=open('AES_OFB_plaintext1.txt')
 text1 = bytes(''.join(f.readlines()),'utf-8')
 
