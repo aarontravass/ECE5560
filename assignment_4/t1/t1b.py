@@ -38,4 +38,4 @@ for i in range(6):
         g = math.gcd(e, phi)
     private_key = modinv(e, phi)
     end = time.process_time()
-    print("Time taken for", key_lenth, "is: ", end - start, "ns")
+    print("Time taken for", key_lenth, "is: ", end - start, "s")
